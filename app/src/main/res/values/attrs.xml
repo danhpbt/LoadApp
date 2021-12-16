@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="LoadingButton">
-<!--   TODO: create custom attributes for the view-->
+        <attr name="button_text" format="string"/>
+        <attr name="normal_color" format="color"/>
+        <attr name="download_color" format="color"/>
+        <attr name="text_size" format="dimension"/>
+        <attr name="text_color" format="color"/>
+        <attr name="corner_radius" format="color"/>
+		<attr name="button_state" format="enum">
+			<enum name="Clicked" value="0"/>
+			<enum name="Loading" value="1"/>
+			<enum name="Finished" value="2"/>
+		</attr>
     </declare-styleable>
 </resources>
