@@ -10,6 +10,7 @@ import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.animation.addListener
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import timber.log.Timber
 import kotlin.properties.Delegates
@@ -21,13 +22,18 @@ import kotlin.properties.Delegates
 class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+
+    private val LEFT_ARC_ALIGN = 16f
+    private val ARC_ALPHA_THICK = Utils.dp2px(resources, 3.0f)
+    private val ARC_PROGRESS_THICK = Utils.dp2px(resources, 5.0f)
+
     private var widthSize = 0f
     private var heightSize = 0f
 
-    private val default_normalColor = R.color.colorPrimaryDark
-    private val default_downloadColor = R.color.colorAccent
+    private val default_normalColor = ContextCompat.getColor(context, R.color.colorPrimaryDark)
+    private val default_downloadColor = ContextCompat.getColor(context,R.color.colorAccent)
     private val default_textSize = 16.0f
-    private val default_textColor = R.color.white
+    private val default_textColor = ContextCompat.getColor(context,R.color.white)
     private val default_cornerRadius = 0f;
 
     private var buttonText = ""
@@ -113,26 +119,41 @@ class LoadingButton @JvmOverloads constructor(
 
         canvas?.clipPath(path);
 
+        fillPaint.color = normal_Color.toInt()
+        //draw background
         canvas?.drawRect(0f, 0f, widthSize, heightSize, fillPaint)
+        buttonState = ButtonState.Loading
+        progress = 0.5f
         if (buttonState == ButtonState.Loading)
         {
+            fillPaint.color = download_Color.toInt()
             var wP = progress*widthSize;
             var hP = heightSize
+            //draw progress
             canvas?.drawRect(0f, 0f, wP, heightSize, fillPaint)
 
-            linePaint.strokeWidth = 1f
+            linePaint.strokeWidth = ARC_ALPHA_THICK
             linePaint.color = ColorUtils.setAlphaComponent(textColor.toInt(), 0x7F)
-            //canvas?.drawArc
 
-            linePaint.strokeWidth = 3f
-            //canvas?.drawArc
+            var arc_size = 2*textSize
+            var left_align = Utils.dp2px(resources, LEFT_ARC_ALIGN)
+            var arc_posx = rectF.left + left_align;
+            var arc_posy = rectF.top + (rectF.height() - arc_size) / 2
+            //draw alpha background arc
+            canvas?.drawArc(arc_posx, arc_posy, arc_posx + arc_size, arc_posy + arc_size,
+            0.0f, 360.0f, false, linePaint)
+
+            linePaint.strokeWidth = ARC_PROGRESS_THICK
+            linePaint.color = textColor.toInt()
+            //draw arc progress
+            canvas?.drawArc(arc_posx, arc_posy, arc_posx + arc_size, arc_posy + arc_size,
+                -90.0f, progress*360.0f, false, linePaint)
 
         }
 
         ///////drawText
-        drawTextCentred(canvas, textPaint, "AAA", widthSize/2, heightSize/2)
-        //canvas?.drawText("AAAA", widthSize/2, heightSize/2, textPaint)
-
+        drawTextCentred(canvas, textPaint, buttonText,
+            rectF.left + widthSize/2, rectF.top + heightSize/2)
 
     }
 
@@ -148,6 +169,7 @@ class LoadingButton @JvmOverloads constructor(
         heightSize = h.toFloat()
         setMeasuredDimension(w, h)
 
+        rectF = RectF(0f, 0f, widthSize, heightSize);
         resetPath()
     }
 
@@ -161,7 +183,7 @@ class LoadingButton @JvmOverloads constructor(
 
     fun drawTextCentred(canvas: Canvas?, paint: Paint, text: String, cx: Float, cy: Float) {
         paint.getTextBounds(text, 0, text.length, textBound)
-        canvas?.drawText(text, cx - textBound.exactCenterX(), cy - textBound.exactCenterY(), paint)
+        canvas?.drawText(text, cx, cy - textBound.exactCenterY(), paint)
     }
 
     fun initByAttributes(attributes: TypedArray)
@@ -175,8 +197,8 @@ class LoadingButton @JvmOverloads constructor(
         textColor = attributes.getColor(R.styleable.LoadingButton_text_color, default_textColor.toInt()).toInt()
         cornerRadius = attributes.getDimension(R.styleable.LoadingButton_corner_radius, default_cornerRadius)
 
-        textSize = Utils.sp2px(resources, textSize)
-        cornerRadius = Utils.dp2px(resources, cornerRadius)
+        //textSize = Utils.sp2px(resources, textSize)
+        //cornerRadius = Utils.dp2px(resources, cornerRadius)
     }
 
     fun initPainters()
@@ -188,6 +210,7 @@ class LoadingButton @JvmOverloads constructor(
         fillPaint.color = normal_Color.toInt()
 
         linePaint.color = textColor.toInt()
+        linePaint.style = Paint.Style.STROKE
         linePaint.strokeCap = Paint.Cap.ROUND
         linePaint.strokeJoin = Paint.Join.ROUND
         linePaint.strokeWidth = Utils.dp2px(resources, 1.0f)

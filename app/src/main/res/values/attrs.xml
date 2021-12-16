@@ -6,7 +6,7 @@
         <attr name="download_color" format="color"/>
         <attr name="text_size" format="dimension"/>
         <attr name="text_color" format="color"/>
-        <attr name="corner_radius" format="color"/>
+        <attr name="corner_radius" format="dimension"/>
 		<attr name="button_state" format="enum">
 			<enum name="Clicked" value="0"/>
 			<enum name="Loading" value="1"/>
