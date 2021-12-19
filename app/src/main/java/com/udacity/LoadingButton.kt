@@ -51,57 +51,45 @@ class LoadingButton @JvmOverloads constructor(
     private var textBound = Rect()
     private var rectF = RectF()
 
-    private var progress: Float = 0f
+    private var progressArc = 0f
+    private var progress = 0f
 
-    private var valueAnimator = ValueAnimator()
+    //private var valueAnimator = ValueAnimator()
+    private val valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+        repeatMode = ValueAnimator.RESTART
+        repeatCount = ValueAnimator.INFINITE
+        duration = 1000
+        addUpdateListener {
+            progressArc = animatedValue as Float
+            invalidate()
+        }
+    }
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
 
         when (new) {
             ButtonState.Completed -> {
-                Timber.d("ButtonState: Completed")
-                isClickable = true
-                valueAnimator.cancel()
+                //Timber.d("ButtonState: Completed")
+                isEnabled = true
+                if (valueAnimator.isStarted)
+                    valueAnimator.cancel()
                 progress = 1f
 
             }
             ButtonState.Clicked -> {
-                Timber.d("ButtonState: Clicked")
-                isClickable = false
+                //Timber.d("ButtonState: Clicked")
+                isEnabled = false
                 progress = 0f
+                if (!valueAnimator.isStarted)
+                    valueAnimator.start()
                 setState(ButtonState.Loading)
             }
             ButtonState.Loading -> {
-                Timber.d("ButtonState: Loading")
-                valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-                    addUpdateListener {
-                        progress = animatedValue as Float
-                        invalidate()
-                    }
 
-                    repeatMode = ValueAnimator.RESTART
-                    repeatCount = ValueAnimator.INFINITE
-                    duration = 2000
-                    start()
-                }
 
-/*                valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-                    addUpdateListener {
-                        progress = animatedValue as Float
-                        Log.d("LoadingButton", "Progress $progress")
-                        invalidate()
-                    }
-                    addListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            setState(ButtonState.Completed)
-                        }
-                    })
-                    duration = 2000
-                    start()
-                }*/
             }
         }
-        invalidate()
 
+        invalidate()
     }
 
 
@@ -114,6 +102,11 @@ class LoadingButton @JvmOverloads constructor(
         initPainters()
     }
 
+    override fun performClick(): Boolean {
+        buttonState = ButtonState.Clicked
+        return super.performClick()
+    }
+
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
@@ -122,8 +115,8 @@ class LoadingButton @JvmOverloads constructor(
         fillPaint.color = normal_Color.toInt()
         //draw background
         canvas?.drawRect(0f, 0f, widthSize, heightSize, fillPaint)
-        buttonState = ButtonState.Loading
-        progress = 0.5f
+        //buttonState = ButtonState.Loading
+        //progress = 0.5f
         if (buttonState == ButtonState.Loading)
         {
             fillPaint.color = download_Color.toInt()
@@ -147,7 +140,7 @@ class LoadingButton @JvmOverloads constructor(
             linePaint.color = textColor.toInt()
             //draw arc progress
             canvas?.drawArc(arc_posx, arc_posy, arc_posx + arc_size, arc_posy + arc_size,
-                -90.0f, progress*360.0f, false, linePaint)
+                -90.0f, progressArc*360.0f, false, linePaint)
 
         }
 
@@ -218,13 +211,21 @@ class LoadingButton @JvmOverloads constructor(
 
     fun setState(state: ButtonState) {
         buttonState = state
-        invalidate()
+        //invalidate()
     }
 
     fun setText(text : String)
     {
         buttonText = text
-        invalidate()
+        //invalidate()
+    }
+
+    fun setLoadingButton(text: String, progressVal : Float = 0f, state: ButtonState = ButtonState.Clicked)
+    {
+        buttonText = text;
+        progress = progressVal
+        buttonState = state
+        //invalidate()
     }
 
 }

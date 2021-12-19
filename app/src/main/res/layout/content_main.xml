@@ -56,7 +56,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/str_download_glide"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:onClick="radioOnClick" />
 
         <RadioButton
             android:id="@+id/rb_udacity"
@@ -64,7 +65,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/str_download_loadapp"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:onClick="radioOnClick" />
 
         <RadioButton
             android:id="@+id/rb_retrofit"
@@ -72,7 +74,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/str_download_retrofit"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:onClick="radioOnClick" />
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
