@@ -149,6 +149,7 @@ class MainActivity : AppCompatActivity() {
     private fun download() {
         if (URL.isEmpty())
         {
+            custom_button.setState(ButtonState.Completed)
             Toast.makeText(this, getString(R.string.msg_select_repo), Toast.LENGTH_LONG).show()
             return;
         }
