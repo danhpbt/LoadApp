@@ -24,10 +24,8 @@ class DetailActivity : AppCompatActivity() {
         }
         else {
             tv_status.setBackgroundColor(Color.RED)
-            img_status.setImageDrawable(R.drawable.ic_download_failed)
+            img_status.setImageResource(R.drawable.ic_download_failed)
         }
-
-
 
         bt_close.setOnClickListener{
             finish()
