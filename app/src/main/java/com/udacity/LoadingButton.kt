@@ -1,7 +1,5 @@
 package com.udacity
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.TypedArray
@@ -9,14 +7,9 @@ import android.graphics.*
 import android.graphics.Paint.ANTI_ALIAS_FLAG
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
-import timber.log.Timber
 import kotlin.properties.Delegates
-
-
-
 
 
 class LoadingButton @JvmOverloads constructor(
@@ -189,8 +182,6 @@ class LoadingButton @JvmOverloads constructor(
         textColor = attributes.getColor(R.styleable.LoadingButton_text_color, default_textColor.toInt()).toInt()
         cornerRadius = attributes.getDimension(R.styleable.LoadingButton_corner_radius, default_cornerRadius)
 
-        //textSize = Utils.sp2px(resources, textSize)
-        //cornerRadius = Utils.dp2px(resources, cornerRadius)
     }
 
     fun initPainters()
@@ -210,13 +201,11 @@ class LoadingButton @JvmOverloads constructor(
 
     fun setState(state: ButtonState) {
         buttonState = state
-        //invalidate()
     }
 
     fun setText(text : String)
     {
         buttonText = text
-        //invalidate()
     }
 
     fun setLoadingButton(text: String, progressVal : Float = 0f, state: ButtonState = ButtonState.Clicked)
@@ -224,7 +213,6 @@ class LoadingButton @JvmOverloads constructor(
         buttonText = text;
         progress = progressVal
         buttonState = state
-        //invalidate()
     }
 
 }

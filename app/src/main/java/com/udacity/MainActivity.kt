@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -15,7 +14,6 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.udacity.Utils.Companion.getBitmapFromVectorDrawable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -38,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             download()
         }
 
-        createNotificationChannel(this, CHANNEL_ID, ChANNEL_NAME, CHANNEL_DES)
+        createNotificationChannel(CHANNEL_ID, ChANNEL_NAME, CHANNEL_DES)
     }
 
     override fun onDestroy() {
@@ -50,7 +48,6 @@ class MainActivity : AppCompatActivity() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            val action = intent?.action
             val downloadManager = context!!.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
             if (id == downloadID) {
@@ -230,7 +227,7 @@ class MainActivity : AppCompatActivity() {
     private val ChANNEL_NAME : String by lazy { getString(R.string.app_name)}
     private val CHANNEL_DES = "Nofication channel for Udacity LoapApp"
 
-    private fun createNotificationChannel(context : Context, channelId : String, channelName : String, channelDes : String)
+    private fun createNotificationChannel(channelId : String, channelName : String, channelDes : String)
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(channelId, channelName,

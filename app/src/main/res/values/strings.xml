@@ -15,11 +15,10 @@
     <string name="str_download_glide">Glide - Image Loading Library by BumpTech</string>
     <string name="str_download_loadapp">LoadApp - Current repository by Udacity</string>
     <string name="str_download_retrofit">Retrofit - Type-safe HTTP client for Android and Java by Square, Inc</string>
-    <!--string name="url_glide">https://github.com/bumptech/glide</string-->
-    <!--string name="url_glide">https://github.com/square/retrofit/archive/refs/heads/master.zip</string-->
-    <string name="url_glide">https://speed.hetzner.de/100MB.bin</string>
-    <string name="url_loadapp">https://github.com/danhpbt/LoadApp</string>
-    <string name="url_retrofit">https://github.com/square/retrofit</string>
+    <string name="url_test_100mb">http://ipv4.download.thinkbroadband.com/100MB.zip</string>
+    <string name="url_glide">https://github.com/bumptech/glide/archive/refs/heads/master.zip</string>
+    <string name="url_loadapp">https://github.com/danhpbt/LoadApp/archive/refs/heads/master.zip</string>
+    <string name="url_retrofit">https://github.com/square/retrofit/archive/refs/heads/master.zip</string>
     <string name="msg_select_repo">Please select item to download</string>
     <string name="download_completed">Download completed.</string>
     <string name="download_failed">Download failed.</string>
