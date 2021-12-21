@@ -12,4 +12,9 @@ class DetailActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
     }
 
+    companion object {
+        const val DOWNLOADED_URL = "DOWNLOAD_URL"
+        const val DOWNLOAD_STATUS = "DOWNLOAD_STATUS"
+    }
+
 }

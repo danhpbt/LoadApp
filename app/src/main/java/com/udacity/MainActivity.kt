@@ -1,19 +1,22 @@
 package com.udacity
 
-import android.app.DownloadManager
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.udacity.Utils.Companion.getBitmapFromVectorDrawable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.*
@@ -24,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     private var downloadID: Long = 0
 
-    private lateinit var notificationManager: NotificationManager
+    //private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
 
@@ -38,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         custom_button.setOnClickListener {
             download()
         }
+
+        createNotificationChannel(this, CHANNEL_ID, ChANNEL_NAME, CHANNEL_DES)
     }
 
     override fun onDestroy() {
@@ -64,13 +69,15 @@ class MainActivity : AppCompatActivity() {
                         DownloadManager.STATUS_SUCCESSFUL ->
                         {
                             //Timber.d("STATUS_SUCCESSFUL")
-                            Toast.makeText(this@MainActivity, getString(R.string.download_completed), Toast.LENGTH_LONG).show()
+                            //Toast.makeText(this@MainActivity, getString(R.string.download_completed), Toast.LENGTH_LONG).show()
+                            sendNotification(this@MainActivity, URL, true)
                         }
 
                         DownloadManager.STATUS_FAILED ->
                         {
                             //Timber.d("STATUS_FAILED")
-                            Toast.makeText(this@MainActivity, getString(R.string.download_failed), Toast.LENGTH_LONG).show()
+                            //Toast.makeText(this@MainActivity, getString(R.string.download_failed), Toast.LENGTH_LONG).show()
+                            sendNotification(this@MainActivity, URL, false)
                         }
 
                         DownloadManager.STATUS_PAUSED->
@@ -99,7 +106,8 @@ class MainActivity : AppCompatActivity() {
                 }
                 else
                 {
-                    Toast.makeText(this@MainActivity, getString(R.string.download_failed), Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this@MainActivity, getString(R.string.download_failed), Toast.LENGTH_LONG).show()
+                    sendNotification(this@MainActivity, URL, false)
                 }
             }
         }
@@ -294,6 +302,72 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //////////////Notification/////////////////
+    private val NOTIFICATION_ID = 2021;
+    private val CHANNEL_ID = "UDACITY_LOADAPP"
+    private val ChANNEL_NAME : String by lazy { getString(R.string.app_name)}
+    private val CHANNEL_DES = "Nofication channel for Udacity LoapApp"
+
+    private fun createNotificationChannel(context : Context, channelId : String, channelName : String, channelDes : String)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(channelId, channelName,
+                NotificationManager.IMPORTANCE_HIGH)
+
+            notificationChannel.setShowBadge(true)
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.GREEN
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = channelDes
+
+            val notificationManager = getSystemService(NotificationManager::class.java)
+
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
+    }
+
+    private fun sendNotification(context : Context, url : String, bStatus : Boolean)
+    {
+        val notificationIntent = Intent(context, DetailActivity::class.java)
+        notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+        notificationIntent.putExtra(DetailActivity.DOWNLOADED_URL, url)
+        notificationIntent.putExtra(DetailActivity.DOWNLOAD_STATUS, bStatus)
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            NOTIFICATION_ID,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val contentText = if (bStatus) getString(R.string.msg_completed) else
+            getString(R.string.msg_failed)
+
+        var drawableId = if (bStatus) R.drawable.ic_download_success else
+            R.drawable.ic_download_failed
+        var largeImg = getBitmapFromVectorDrawable(this, drawableId);
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+        notification.setSmallIcon(R.drawable.ic_download)
+        notification.setLargeIcon(largeImg)
+        notification.setContentTitle(getString(R.string.app_name))
+        notification.setContentText(contentText)
+        //NotificationCompat.PRIORITY_HIGH for show action as default
+        notification.priority = NotificationCompat.PRIORITY_HIGH
+        //notification.setCategory(NotificationCompat.CATEGORY_MESSAGE)
+        notification.setAutoCancel(true)
+        notification.setContentIntent(pendingIntent)
+        notification.addAction(R.drawable.ic_launcher_background,
+            getString(R.string.action_detail), pendingIntent)
+
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.notify(NOTIFICATION_ID, notification.build())
+
+    }
+
+
+
+
+    ///////////////////////////////////////////
 
     companion object {
         private var URL = ""

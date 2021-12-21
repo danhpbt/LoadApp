@@ -23,7 +23,7 @@ class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private val LEFT_ARC_ALIGN = 16f
+    private val LEFT_ARC_ALIGN = Utils.dp2px(resources, 16f)
     private val ARC_ALPHA_THICK = Utils.dp2px(resources, 3.0f)
     private val ARC_PROGRESS_THICK = Utils.dp2px(resources, 5.0f)
 
@@ -129,7 +129,7 @@ class LoadingButton @JvmOverloads constructor(
             linePaint.color = ColorUtils.setAlphaComponent(textColor.toInt(), 0x7F)
 
             var arc_size = 2*textSize
-            var left_align = Utils.dp2px(resources, LEFT_ARC_ALIGN)
+            var left_align = LEFT_ARC_ALIGN
             var arc_posx = rectF.left + left_align;
             var arc_posy = rectF.top + (rectF.height() - arc_size) / 2
             //draw alpha background arc
