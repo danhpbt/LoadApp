@@ -21,7 +21,6 @@
     <string name="url_loadapp">https://github.com/danhpbt/LoadApp</string>
     <string name="url_retrofit">https://github.com/square/retrofit</string>
     <string name="msg_select_repo">Please select item to download</string>
-    <string name="download">Download</string>
     <string name="download_completed">Download completed.</string>
     <string name="download_failed">Download failed.</string>
     <string name="download_paused">Download paused.</string>
@@ -30,12 +29,11 @@
     <string name="msg_completed">Your download has completed.</string>
     <string name="msg_failed">Your download has failed.</string>
 
-    <string name="detail_url">URL:</string>
+    <string name="detail_url">Url:</string>
     <string name="detail_status">Status:</string>
     <string name="str_close">Close</string>
-    <string name="status_success">SUCCESS</string>
-    <string name="status_fail">FAIL</string>
-
-
+    <string name="status_success">Success</string>
+    <string name="status_fail">Fail</string>
+    <string name="str_download">Download</string>
 
 </resources>

@@ -1,7 +1,9 @@
 package com.udacity
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.content_detail.*
@@ -12,6 +14,9 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
         setSupportActionBar(toolbar)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
 
         val url = intent.getStringExtra(DOWNLOADED_URL)
         val bSuccess = intent.getBooleanExtra(DOWNLOAD_STATUS, true)
@@ -30,6 +35,28 @@ class DetailActivity : AppCompatActivity() {
         bt_close.setOnClickListener{
             finish()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId)
+        {
+            android.R.id.home ->
+            {
+                backToMainActivity()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        backToMainActivity()
+    }
+
+    private fun backToMainActivity()
+    {
+        finish()
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 
     companion object {

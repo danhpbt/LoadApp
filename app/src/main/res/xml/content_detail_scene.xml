@@ -19,16 +19,28 @@
             app:clickAction="jumpToStart|transitionToEnd"
             app:targetId="@id/img_status" />
         <KeyFrameSet>
+
             <KeyAttribute
-                android:rotation="-360"
-                android:scaleX="1.5"
-                android:scaleY="1.5"
+                app:motionTarget="@+id/img_status"
                 app:framePosition="50"
-                app:motionTarget="@id/img_status" />
+                android:alpha="1" />
             <KeyAttribute
-                android:rotation="-720"
+                app:motionTarget="@+id/img_status"
+                app:framePosition="0"
+                android:alpha="0" />
+            <KeyAttribute
+                app:motionTarget="@+id/img_status"
+                app:framePosition="50"
+                android:scaleX="1.5"
+                android:scaleY="1.5" />
+            <KeyAttribute
+                app:motionTarget="@+id/tv_status"
+                app:framePosition="0"
+                android:alpha="0" />
+            <KeyAttribute
+                app:motionTarget="@+id/tv_status"
                 app:framePosition="100"
-                app:motionTarget="@id/img_status" />
+                android:alpha="1" />
         </KeyFrameSet>
 
     </Transition>

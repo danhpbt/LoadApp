@@ -54,7 +54,6 @@ class LoadingButton @JvmOverloads constructor(
     private var progressArc = 0f
     private var progress = 0f
 
-    //private var valueAnimator = ValueAnimator()
     private val valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
         repeatMode = ValueAnimator.RESTART
         repeatCount = ValueAnimator.INFINITE
@@ -64,7 +63,7 @@ class LoadingButton @JvmOverloads constructor(
             invalidate()
         }
     }
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
+    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { _, _, new ->
 
         when (new) {
             ButtonState.Completed -> {
@@ -123,7 +122,7 @@ class LoadingButton @JvmOverloads constructor(
             var wP = progress*widthSize;
             var hP = heightSize
             //draw progress
-            canvas?.drawRect(0f, 0f, wP, heightSize, fillPaint)
+            canvas?.drawRect(0f, 0f, wP, hP, fillPaint)
 
             linePaint.strokeWidth = ARC_ALPHA_THICK
             linePaint.color = ColorUtils.setAlphaComponent(textColor.toInt(), 0x7F)

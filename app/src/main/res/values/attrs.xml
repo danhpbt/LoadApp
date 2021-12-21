@@ -7,10 +7,5 @@
         <attr name="text_size" format="dimension"/>
         <attr name="text_color" format="color"/>
         <attr name="corner_radius" format="dimension"/>
-		<attr name="button_state" format="enum">
-			<enum name="Clicked" value="0"/>
-			<enum name="Loading" value="1"/>
-			<enum name="Finished" value="2"/>
-		</attr>
     </declare-styleable>
 </resources>

@@ -27,10 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     private var downloadID: Long = 0
 
-    //private lateinit var notificationManager: NotificationManager
-    private lateinit var pendingIntent: PendingIntent
-    private lateinit var action: NotificationCompat.Action
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -69,15 +65,13 @@ class MainActivity : AppCompatActivity() {
                         DownloadManager.STATUS_SUCCESSFUL ->
                         {
                             //Timber.d("STATUS_SUCCESSFUL")
-                            //Toast.makeText(this@MainActivity, getString(R.string.download_completed), Toast.LENGTH_LONG).show()
-                            sendNotification(this@MainActivity, URL, true)
+                            notifySuccess()
                         }
 
                         DownloadManager.STATUS_FAILED ->
                         {
                             //Timber.d("STATUS_FAILED")
-                            //Toast.makeText(this@MainActivity, getString(R.string.download_failed), Toast.LENGTH_LONG).show()
-                            sendNotification(this@MainActivity, URL, false)
+                            notifyFail()
                         }
 
                         DownloadManager.STATUS_PAUSED->
@@ -94,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                         DownloadManager.STATUS_PENDING ->
                         {
                             //Timber.d("STATUS_PENDING")
+                            Toast.makeText(this@MainActivity, getString(R.string.download_pending), Toast.LENGTH_LONG).show()
 
                         }
 
@@ -106,11 +101,24 @@ class MainActivity : AppCompatActivity() {
                 }
                 else
                 {
-                    //Toast.makeText(this@MainActivity, getString(R.string.download_failed), Toast.LENGTH_LONG).show()
-                    sendNotification(this@MainActivity, URL, false)
+                    notifyFail()
                 }
             }
         }
+    }
+
+    private fun notifySuccess()
+    {
+        custom_button.setLoadingButton(getString(R.string.str_download), 0f, ButtonState.Clicked)
+        Toast.makeText(this@MainActivity, getString(R.string.download_completed), Toast.LENGTH_LONG).show()
+        sendNotification(this@MainActivity, URL, true)
+    }
+
+    private fun notifyFail()
+    {
+        custom_button.setLoadingButton(getString(R.string.str_download), 0f, ButtonState.Clicked)
+        Toast.makeText(this@MainActivity, getString(R.string.download_failed), Toast.LENGTH_LONG).show()
+        sendNotification(this@MainActivity, URL, false)
     }
 
     fun radioOnClick(view : View)
@@ -159,102 +167,9 @@ class MainActivity : AppCompatActivity() {
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID = downloadManager.enqueue(request)// enqueue puts the download request in the queue.
 
-
         ////////////////////////////////////
         getDownloadProgress(downloadManager)
-/*        val threadWithRunnable = Thread()
-        {
-            getStatusDownload(downloadManager)
-        }
-        threadWithRunnable.start()*/
-
-/*        var percentage = 0.0
-        var finishDownload = false
-        while (!finishDownload) {
-            val query = DownloadManager.Query()
-            query.setFilterById(downloadID)
-            val cursor = downloadManager.query(query)
-
-            try {
-                cursor.moveToFirst()
-                val status = cursor.getInt(cursor.getColumnIndex((DownloadManager.COLUMN_STATUS)))
-                when (status) {
-                    DownloadManager.STATUS_FAILED -> {
-                        //sendFileDataToDownloadReceiver(title, desc, false, fragContext)
-                        Timber.d("STATUS_FAILED")
-                        finishDownload = true
-                    }
-
-                    DownloadManager.STATUS_RUNNING -> {
-                        val total_Download_Size =
-                            cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                        val total_downloaded =
-                            cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
-                        if (total_Download_Size != -1) {
-                            percentage = (total_downloaded / total_Download_Size.toDouble())
-                            var text = "Downloading $percentage%"
-                            Timber.d(text)
-                        }
-                    }
-                    DownloadManager.STATUS_SUCCESSFUL -> {
-                        //sendFileDataToDownloadReceiver(title, desc, true, fragContext)
-                        Timber.d("STATUS_SUCCESSFUL")
-                        finishDownload = true
-                    }
-                }
-            } finally {
-                cursor.close()
-            }
-        }*/
-
         ////////////////////////////////////
-    }
-
-    private fun getStatusDownload(downloadManager : DownloadManager)
-    {
-        var finishDownload = false
-        var progress = 0f;
-
-        while (!finishDownload)
-        {
-            var cursor = downloadManager.query(DownloadManager.Query().setFilterById(downloadID))
-
-            if (cursor.moveToFirst())
-            {
-                var status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
-                when(status)
-                {
-                    DownloadManager.STATUS_FAILED ->
-                    {
-                        Timber.d("STATUS_FAILED")
-                        finishDownload = true
-                    }
-
-                    DownloadManager.STATUS_RUNNING ->
-                    {
-                        var total = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
-                        if (total >= 0) {
-                            var downloaded = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                            progress = downloaded * 1f / total;
-                            var percent = (progress*100).toInt()
-                            var text = "Downloading $percent%"
-                            Timber.d(text)
-                            //custom_button.setLoadingButton(text, progress, ButtonState.Loading)
-                        }
-                    }
-
-                    DownloadManager.STATUS_SUCCESSFUL ->
-                    {
-                        Timber.d("STATUS_SUCCESSFUL")
-                        progress = 1f
-                        finishDownload = true;
-                    }
-                }
-
-            }
-
-        }
-
     }
 
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
@@ -289,6 +204,14 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
+                        DownloadManager.STATUS_PENDING ->
+                        {
+                            withContext(Dispatchers.Main) {
+                                custom_button.setLoadingButton(getString(R.string.download_pending), 0f, ButtonState.Loading)
+                            }
+                            delay(100)
+                        }
+
                         DownloadManager.STATUS_SUCCESSFUL, DownloadManager.STATUS_FAILED ->
                         {
                             finishDownload = true;
@@ -304,7 +227,6 @@ class MainActivity : AppCompatActivity() {
 
     //////////////Notification/////////////////
     private val NOTIFICATION_ID = 2021;
-    private val CHANNEL_ID = "UDACITY_LOADAPP"
     private val ChANNEL_NAME : String by lazy { getString(R.string.app_name)}
     private val CHANNEL_DES = "Nofication channel for Udacity LoapApp"
 
@@ -364,15 +286,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
-
     ///////////////////////////////////////////
 
     companion object {
         private var URL = ""
         private var REPO_NAME = ""
-        private const val CHANNEL_ID = "channelId"
+        private const val CHANNEL_ID = "UDACITY_LOADAPP"
     }
 
 

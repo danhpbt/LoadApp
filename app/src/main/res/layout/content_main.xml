@@ -15,7 +15,7 @@
         android:layout_height="60dp"
         android:layout_margin="20dp"
         app:text_size="20sp"
-        app:button_text="Text Button"
+        app:button_text="@string/str_download"
         app:corner_radius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
