@@ -107,8 +107,6 @@ class LoadingButton @JvmOverloads constructor(
         fillPaint.color = normal_Color.toInt()
         //draw background
         canvas?.drawRect(0f, 0f, widthSize, heightSize, fillPaint)
-        //buttonState = ButtonState.Loading
-        //progress = 0.5f
         if (buttonState == ButtonState.Loading)
         {
             fillPaint.color = download_Color.toInt()

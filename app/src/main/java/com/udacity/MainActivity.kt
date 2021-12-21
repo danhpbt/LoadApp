@@ -106,14 +106,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun notifySuccess()
     {
-        custom_button.setLoadingButton(getString(R.string.str_download), 0f, ButtonState.Clicked)
+        custom_button.setLoadingButton(getString(R.string.str_download), 0f, ButtonState.Completed)
         Toast.makeText(this@MainActivity, getString(R.string.download_completed), Toast.LENGTH_LONG).show()
         sendNotification(this@MainActivity, URL, true)
     }
 
     private fun notifyFail()
     {
-        custom_button.setLoadingButton(getString(R.string.str_download), 0f, ButtonState.Clicked)
+        custom_button.setLoadingButton(getString(R.string.str_download), 0f, ButtonState.Completed)
         Toast.makeText(this@MainActivity, getString(R.string.download_failed), Toast.LENGTH_LONG).show()
         sendNotification(this@MainActivity, URL, false)
     }
@@ -196,9 +196,16 @@ class MainActivity : AppCompatActivity() {
                                 withContext(Dispatchers.Main) {
                                     custom_button.setLoadingButton(text, progress, ButtonState.Loading)
                                 }
-
-                                delay(100)
                             }
+                            else
+                            {
+                                //server not support total_size
+                                withContext(Dispatchers.Main) {
+                                    custom_button.setLoadingButton(getString(R.string.download_pending), 0f, ButtonState.Loading)
+                                }
+                            }
+
+                            delay(100)
                         }
 
                         DownloadManager.STATUS_PENDING ->
