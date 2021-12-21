@@ -18,10 +18,16 @@ class DetailActivity : AppCompatActivity() {
         tv_url.text = url
         tv_status.text = if (bSuccess) getString(R.string.status_success) else
             getString(R.string.status_fail)
-        if (bSuccess)
+        if (bSuccess) {
             tv_status.setBackgroundColor(Color.GREEN)
-        else
+            img_status.setImageResource(R.drawable.ic_download_success)
+        }
+        else {
             tv_status.setBackgroundColor(Color.RED)
+            img_status.setImageDrawable(R.drawable.ic_download_failed)
+        }
+
+
 
         bt_close.setOnClickListener{
             finish()
