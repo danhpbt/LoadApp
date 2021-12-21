@@ -353,7 +353,7 @@ class MainActivity : AppCompatActivity() {
         notification.setContentText(contentText)
         //NotificationCompat.PRIORITY_HIGH for show action as default
         notification.priority = NotificationCompat.PRIORITY_HIGH
-        //notification.setCategory(NotificationCompat.CATEGORY_MESSAGE)
+        notification.setCategory(NotificationCompat.CATEGORY_STATUS)
         notification.setAutoCancel(true)
         notification.setContentIntent(pendingIntent)
         notification.addAction(R.drawable.ic_launcher_background,

@@ -33,6 +33,8 @@
     <string name="detail_url">URL:</string>
     <string name="detail_status">Status:</string>
     <string name="str_close">Close</string>
+    <string name="status_success">SUCCESS</string>
+    <string name="status_fail">FAIL</string>
 
 
 
